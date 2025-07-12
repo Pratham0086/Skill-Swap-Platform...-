@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard | Skill Swap{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Admin Dashboard</h2>
+    {% if request.session.platform_message %}
+        <div class="alert alert-info">Platform Message: {{ request.session.platform_message }}</div>
+    {% endif %}
+    <form method="post" action="{% url 'send_message' %}" class="mb-3">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" name="platform_message" class="form-control" placeholder="Send platform-wide message" required>
+            <button type="submit" class="btn btn-warning">Send</button>
+        </div>
+    </form>
+    <ul class="nav nav-tabs mb-3" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation"><button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">Users</button></li>
+        <li class="nav-item" role="presentation"><button class="nav-link" id="skills-tab" data-bs-toggle="tab" data-bs-target="#skills" type="button" role="tab">Skills</button></li>
+        <li class="nav-item" role="presentation"><button class="nav-link" id="swaps-tab" data-bs-toggle="tab" data-bs-target="#swaps" type="button" role="tab">Swaps</button></li>
+        <li class="nav-item" role="presentation"><button class="nav-link" id="feedback-tab" data-bs-toggle="tab" data-bs-target="#feedback" type="button" role="tab">Feedback</button></li>
+    </ul>
+    <div class="tab-content" id="adminTabsContent">
+        <div class="tab-pane fade show active" id="users" role="tabpanel">
+            <h4>Users</h4>
+            <a href="{% url 'download_users_csv' %}" class="btn btn-sm btn-outline-secondary mb-2">Download Users CSV</a>
+            <table class="table table-striped">
+                <thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Is Staff</th><th>Is Active</th><th>Actions</th></tr></thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.is_staff }}</td>
+                        <td>{{ user.is_active }}</td>
+                        <td>
+                            {% if not user.is_staff %}
+                                {% if user.is_active %}
+                                    <a href="{% url 'ban_user' user.id %}" class="btn btn-sm btn-danger">Ban</a>
+                                {% else %}
+                                    <a href="{% url 'unban_user' user.id %}" class="btn btn-sm btn-success">Unban</a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="skills" role="tabpanel">
+            <h4>Skills</h4>
+            <form method="post" class="mb-3">
+                {% csrf_token %}
+                {{ skill_form.non_field_errors }}
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-6">
+                        {{ skill_form.name.label_tag }}
+                        {{ skill_form.name }}
+                        {% for error in skill_form.name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" name="add_skill" class="btn btn-primary">Add Skill</button>
+                    </div>
+                </div>
+            </form>
+            <table class="table table-striped">
+                <thead><tr><th>ID</th><th>Name</th></tr></thead>
+                <tbody>
+                    {% for skill in skills %}
+                    <tr><td>{{ skill.id }}</td><td>{{ skill.name }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="swaps" role="tabpanel">
+            <h4>Swaps</h4>
+            <a href="{% url 'download_swaps_csv' %}" class="btn btn-sm btn-outline-secondary mb-2">Download Swaps CSV</a>
+            <table class="table table-striped">
+                <thead><tr><th>ID</th><th>Sender</th><th>Receiver</th><th>Offered</th><th>Requested</th><th>Status</th></tr></thead>
+                <tbody>
+                    {% for swap in swaps %}
+                    <tr><td>{{ swap.id }}</td><td>{{ swap.sender.username }}</td><td>{{ swap.receiver.username }}</td><td>{{ swap.skill_offered.name }}</td><td>{{ swap.skill_requested.name }}</td><td>{{ swap.get_status_display }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="feedback" role="tabpanel">
+            <h4>Feedback</h4>
+            <a href="{% url 'download_feedback_csv' %}" class="btn btn-sm btn-outline-secondary mb-2">Download Feedback CSV</a>
+            <table class="table table-striped">
+                <thead><tr><th>ID</th><th>From</th><th>To</th><th>Rating</th><th>Comment</th><th>Reported</th></tr></thead>
+                <tbody>
+                    {% for fb in feedbacks %}
+                    <tr><td>{{ fb.id }}</td><td>{{ fb.from_user.username }}</td><td>{{ fb.to_user.username }}</td><td>{{ fb.rating }}</td><td>{{ fb.comment }}</td><td>{{ fb.reported }}</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}My Feedback | Skill Swap{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">Feedback Received</div>
+            <ul class="list-group list-group-flush">
+                {% for feedback in feedbacks %}
+                    <li class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>From:</strong> {{ feedback.from_user.username }}<br>
+                                <strong>Rating:</strong> 
+                                {% for i in "12345"|slice:":feedback.rating" %}<span class="text-warning">&#9733;</span>{% endfor %}
+                                {% for i in "12345"|slice:"feedback.rating:" %}<span class="text-secondary">&#9733;</span>{% endfor %}
+                                <br>
+                                <strong>Comment:</strong> {{ feedback.comment|default:"No comment." }}
+                                <br>
+                                <small class="text-muted">{{ feedback.created_at|date:"M d, Y H:i" }}</small>
+                            </div>
+                            {% if not feedback.reported %}
+                                <a href="{% url 'report_feedback' feedback.id %}" class="btn btn-sm btn-outline-danger">Report</a>
+                            {% else %}
+                                <span class="badge bg-danger">Reported</span>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No feedback received yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %} 
