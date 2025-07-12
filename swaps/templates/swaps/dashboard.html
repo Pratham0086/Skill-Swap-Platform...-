@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}My Swaps | Skill Swap{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">Sent Requests</div>
+            <ul class="list-group list-group-flush">
+                {% for swap in sent_swaps %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        To <strong>{{ swap.receiver.username }}</strong>: <span class="badge bg-primary">{{ swap.skill_offered.name }}</span> for <span class="badge bg-secondary">{{ swap.skill_requested.name }}</span>
+                        <span class="badge bg-info text-dark">{{ swap.get_status_display }}</span>
+                        <div>
+                            {% if swap.status == 'pending' %}
+                                <a href="{% url 'cancel_swap' swap.id %}" class="btn btn-sm btn-outline-warning">Cancel</a>
+                                <a href="{% url 'delete_swap' swap.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                            {% elif swap.status != 'accepted' %}
+                                <a href="{% url 'delete_swap' swap.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No sent requests yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">Received Requests</div>
+            <ul class="list-group list-group-flush">
+                {% for swap in received_swaps %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        From <strong>{{ swap.sender.username }}</strong>: <span class="badge bg-primary">{{ swap.skill_offered.name }}</span> for <span class="badge bg-secondary">{{ swap.skill_requested.name }}</span>
+                        <span class="badge bg-info text-dark">{{ swap.get_status_display }}</span>
+                        <div>
+                            {% if swap.status == 'pending' %}
+                                <a href="{% url 'accept_swap' swap.id %}" class="btn btn-sm btn-outline-success">Accept</a>
+                                <a href="{% url 'reject_swap' swap.id %}" class="btn btn-sm btn-outline-danger">Reject</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No received requests yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %} 

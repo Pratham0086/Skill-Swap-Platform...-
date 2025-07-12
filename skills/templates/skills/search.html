@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Search by Skill | Skill Swap{% endblock %}
+{% block content %}
+<div class="row justify-content-center mb-4">
+    <div class="col-md-10">
+        <form method="get" class="row g-2 align-items-end">
+            <div class="col-md-4">
+                <label for="q" class="form-label">Skill</label>
+                <input type="text" class="form-control" id="q" name="q" placeholder="e.g. Photoshop" value="{{ query }}">
+            </div>
+            <div class="col-md-3">
+                <label for="availability" class="form-label">Availability</label>
+                <select class="form-select" id="availability" name="availability">
+                    <option value="">Any</option>
+                    <option value="weekends" {% if availability == 'weekends' %}selected{% endif %}>Weekends</option>
+                    <option value="weekdays" {% if availability == 'weekdays' %}selected{% endif %}>Weekdays</option>
+                    <option value="evenings" {% if availability == 'evenings' %}selected{% endif %}>Evenings</option>
+                    <option value="custom" {% if availability == 'custom' %}selected{% endif %}>Custom</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" class="form-control" id="location" name="location" placeholder="City or area" value="{{ location }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <h4 class="mb-3">Results</h4>
+        {% if users %}
+            <div class="row">
+                {% for user in users %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body d-flex align-items-center">
+                                {% if user.profile.profile_photo %}
+                                    <img src="{{ user.profile.profile_photo.url }}" class="rounded-circle me-3" width="60" height="60" alt="Profile Photo">
+                                {% else %}
+                                    <img src="https://ui-avatars.com/api/?name={{ user.username }}" class="rounded-circle me-3" width="60" height="60" alt="Profile Photo">
+                                {% endif %}
+                                <div>
+                                    <h5 class="mb-1">{{ user.username }}</h5>
+                                    {% if user.profile.location %}<p class="mb-1"><strong>Location:</strong> {{ user.profile.location }}</p>{% endif %}
+                                    <p class="mb-1"><strong>Availability:</strong> {{ user.profile.get_availability_display }}</p>
+                                    <p class="mb-1"><strong>Skills:</strong> 
+                                        {% for uskill in user.userskill_set.all %}
+                                            {% if uskill.skill_type == 'offered' %}
+                                                <span class="badge bg-primary">{{ uskill.skill.name }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                    <a href="#" class="btn btn-outline-primary btn-sm mt-2">View Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">No users found matching your criteria.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

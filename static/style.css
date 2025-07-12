@@ -1,0 +1,28 @@
+body {
+    background: #f8f9fa;
+}
+
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+}
+
+.btn-primary, .navbar.bg-primary {
+    background: linear-gradient(90deg, #4e54c8 0%, #8f94fb 100%);
+    border: none;
+}
+
+.btn-outline-primary {
+    border-color: #4e54c8;
+    color: #4e54c8;
+}
+
+.btn-outline-primary:hover {
+    background: #4e54c8;
+    color: #fff;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    letter-spacing: 1px;
+} 

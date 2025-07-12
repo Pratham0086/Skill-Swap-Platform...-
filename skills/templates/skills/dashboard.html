@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}My Skills | Skill Swap{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">Offered Skills</div>
+            <ul class="list-group list-group-flush">
+                {% for uskill in offered_skills %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ uskill.skill.name }}
+                        <a href="{% url 'delete_user_skill' uskill.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No offered skills yet.</li>
+                {% endfor %}
+            </ul>
+            <form method="post" class="mt-3">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" name="offered_skill_name" class="form-control" placeholder="Add offered skill" required>
+                    <button type="submit" name="add_offered" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">Wanted Skills</div>
+            <ul class="list-group list-group-flush">
+                {% for uskill in wanted_skills %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ uskill.skill.name }}
+                        <a href="{% url 'delete_user_skill' uskill.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item">No wanted skills yet.</li>
+                {% endfor %}
+            </ul>
+            <form method="post" class="mt-3">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" name="wanted_skill_name" class="form-control" placeholder="Add wanted skill" required>
+                    <button type="submit" name="add_wanted" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 
