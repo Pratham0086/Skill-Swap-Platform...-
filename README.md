@@ -1,71 +1,63 @@
-# 🔁 Skill Swap Platform - Odoo Hackathon Project
+# Skill Swap Platform
 
-A mini-application built on **Odoo** that enables users to **offer their skills** and **request skills from others**, fostering a barter-based knowledge and service exchange community.
-
----
-
-## 📌 Overview
-
-The Skill Swap Platform allows users to:
-
-- Create a personalized profile
-- List skills they **offer** and **want**
-- Specify their **availability**
-- Browse other users by skills
-- **Request**, **Accept/Reject**, or **Delete** skill swap offers
-- Leave **ratings and feedback** after a swap
-- Control profile visibility (Public/Private)
-
----
-
-## ⚙️ Tech Stack
-
-- **Odoo 16/17** (Community Edition)
-- Python (Odoo ORM)
-- XML (Views, Menus)
-- PostgreSQL (Odoo backend DB)
-- Odoo Studio *(if used)*
-
----
+A modern, responsive web application for skill exchange and barter-style learning, built with Django and Bootstrap 5.
 
 ## 🚀 Features
+- **User Profiles:** Name, location, profile photo, privacy, and multi-block availability
+- **Skill Listings:** Offer and want skills, each with description, experience level, and category
+- **Skill Search:** Find users by skill, category, location, and availability
+- **Swap Requests:** Send, accept, reject, cancel, and delete swap requests with message and preferred time
+- **Feedback & Ratings:** Leave and view feedback after swaps
+- **Admin Panel:** Custom dashboard for user/skill moderation, analytics, platform-wide messages, and CSV exports
+- **Responsive UI:** Beautiful, mobile-friendly design with Bootstrap 5 and icons
 
-### 👤 User Profile
-- Name, optional location and profile photo
-- Skills Offered (One2many list)
-- Skills Wanted (One2many list)
-- Availability (e.g., weekends, evenings)
-- Public/Private profile toggle
+## 🛠️ Tech Stack
+- **Backend:** Django 5
+- **Frontend:** Bootstrap 5, Bootstrap Icons
+- **Database:** SQLite (default, easy to switch to PostgreSQL)
 
-### 🔍 Search and Discover
-- Filter users by skill
-- View available swap opportunities
-- Profile visibility rules respected
+## 📦 Setup Instructions
+1. **Clone the repository:**
+   ```sh
+   git clone https://github.com/Pratham0086/Skill-Swap-Platform...-.git
+   cd Skill-Swap-Platform...-
+   ```
+2. **Create a virtual environment and activate it:**
+   ```sh
+   python -m venv venv
+   # On Windows:
+   venv\Scripts\activate
+   # On Mac/Linux:
+   source venv/bin/activate
+   ```
+3. **Install dependencies:**
+   ```sh
+   pip install -r requirements.txt
+   ```
+4. **Apply migrations:**
+   ```sh
+   python manage.py migrate
+   ```
+5. **Create a superuser (admin):**
+   ```sh
+   python manage.py createsuperuser
+   ```
+6. **Run the development server:**
+   ```sh
+   python manage.py runserver
+   ```
+7. **Access the app:**
+   - User site: [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+   - Admin panel: [http://127.0.0.1:8000/adminpanel/](http://127.0.0.1:8000/adminpanel/)
 
-### 🔁 Swap Requests
-- Send requests by selecting a skill offered and skill requested
-- Accept or reject swap requests
-- Cancel (delete) pending requests
+## ✨ Contribution
+- Fork the repo and create a feature branch
+- Submit a pull request with a clear description
+- For major changes, open an issue first to discuss
 
-### ⭐ Feedback System
-- After swap completion, users can rate each other
-- Optional written feedback
-- Builds a trust-based reputation system
+## 📄 License
+MIT
 
 ---
 
-## 🧱 Core Models
-
-- `skill.profile` – Extends user profile
-- `skill.line` – Represents individual skill (offered/wanted)
-- `skill.swap.request` – Handles request workflow
-- `skill.rating` – Feedback and ratings for completed swaps
-
----
-
-## 📂 Installation
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/<your-username>/skill-swap-platform.git
+**Skill Swap Platform** &copy; {{ now|date:'Y' }} | [GitHub Repo](https://github.com/Pratham0086/Skill-Swap-Platform...-.git)
