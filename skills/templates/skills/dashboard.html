@@ -10,7 +10,7 @@
                 {% for uskill in offered_skills %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ uskill.skill.name }}
-                        <a href="{% url 'delete_user_skill' uskill.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
+                        <a href="{% url 'skills:delete_user_skill' uskill.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
                     </li>
                 {% empty %}
                     <li class="list-group-item">No offered skills yet.</li>
@@ -32,7 +32,7 @@
                 {% for uskill in wanted_skills %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ uskill.skill.name }}
-                        <a href="{% url 'delete_user_skill' uskill.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
+                        <a href="{% url 'skills:delete_user_skill' uskill.id %}" class="btn btn-sm btn-outline-danger">Remove</a>
                     </li>
                 {% empty %}
                     <li class="list-group-item">No wanted skills yet.</li>

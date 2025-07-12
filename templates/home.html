@@ -1,13 +1,127 @@
 {% extends 'base.html' %}
-{% block title %}Welcome | Skill Swap{% endblock %}
+{% block title %}Home | Skill Swap{% endblock %}
 {% block content %}
-<div class="text-center mt-5">
-    <h1>Welcome to Skill Swap!</h1>
-    <p class="lead">Exchange skills, connect, and grow together.</p>
+
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="container mt-4">
     {% if not user.is_authenticated %}
+    <div class="text-center">
+        <h1>Welcome to Skill Swap!</h1>
+        <p class="lead">Exchange skills, connect, and grow together.</p>
         <a href="{% url 'register' %}" class="btn btn-primary btn-lg mt-3">Get Started</a>
+        <a href="{% url 'login' %}" class="btn btn-outline-primary btn-lg mt-3 ms-2">Login</a>
+    </div>
     {% else %}
-        <a href="{% url 'profile' %}" class="btn btn-primary btn-lg mt-3">Go to Dashboard</a>
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Discover People to Swap Skills With</h1>
+            <p class="lead mb-4">Browse profiles and find people to exchange skills with!</p>
+        </div>
+    </div>
+
+    {% if profiles %}
+    <div class="row">
+        {% for profile in profiles %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        {% if profile.profile_photo %}
+                        <img src="{{ profile.profile_photo.url }}" alt="{{ profile.user.username }}" 
+                             class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-secondary rounded-circle me-3 d-flex align-items-center justify-content-center" 
+                             style="width: 60px; height: 60px;">
+                            <span class="text-white">{{ profile.user.username|first|upper }}</span>
+                        </div>
+                        {% endif %}
+                        <div>
+                            <h5 class="card-title mb-1">{{ profile.user.get_full_name|default:profile.user.username }}</h5>
+                            <p class="text-muted mb-0">@{{ profile.user.username }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if profile.location %}
+                    <p class="card-text">
+                        <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                        {{ profile.location }}
+                    </p>
+                    {% endif %}
+                    
+                    <p class="card-text">
+                        <i class="fas fa-clock text-muted me-2"></i>
+                        Available: {{ profile.get_availability_display }}
+                    </p>
+                    
+                    {% if profile.user.userskill_set.all %}
+                    <div class="mb-3">
+                        <h6 class="text-muted mb-2">Skills:</h6>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% for user_skill in profile.user.userskill_set.all %}
+                            <span class="badge bg-{% if user_skill.skill_type == 'offered' %}success{% else %}warning{% endif %}">
+                                {{ user_skill.skill.name }} ({{ user_skill.get_skill_type_display }})
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post" action="{% url 'request_swap' profile.id %}" class="mt-auto">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="message-{{ profile.id }}" class="form-label">Message (optional):</label>
+                            <textarea class="form-control" id="message-{{ profile.id }}" name="message" 
+                                      rows="2" placeholder="Hi! I'd like to swap skills with you..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-handshake me-2"></i>Request Skill Swap
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center mt-5">
+        <div class="alert alert-info">
+            <h4>No profiles available yet!</h4>
+            <p>Be the first to create your profile and start connecting with others.</p>
+            <a href="{% url 'profile_edit' %}" class="btn btn-primary">Complete Your Profile</a>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <a href="{% url 'profile' %}" class="btn btn-outline-primary me-2">My Profile</a>
+            <a href="{% url 'skills:dashboard' %}" class="btn btn-outline-secondary me-2">Manage Skills</a>
+            <a href="{% url 'swaps:dashboard' %}" class="btn btn-outline-info me-2">My Swap Requests</a>
+            <a href="{% url 'reviews:feedback_received' %}" class="btn btn-outline-warning">{% if user.is_superuser %}Manage Feedback{% else %}My Feedback{% endif %}</a>
+        </div>
+    </div>
+    
+    {% if not user.is_superuser %}
+    <div class="row mt-3">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                <strong>Feedback System:</strong> Only administrators can provide feedback. Users can view feedback they receive and report inappropriate content.
+            </div>
+        </div>
+    </div>
+    {% endif %}
     {% endif %}
 </div>
+
 {% endblock %} 

@@ -1,6 +1,8 @@
 from django.urls import path
 from . import views
 
+app_name = 'reviews'
+
 urlpatterns = [
     path('', views.reviews_root_redirect),
     path('leave/<int:swap_id>/', views.leave_feedback, name='leave_feedback'),

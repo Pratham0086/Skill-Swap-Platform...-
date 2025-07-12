@@ -22,12 +22,13 @@ from skill_swap import views as core_views
 
 urlpatterns = [
     path('', core_views.home, name='home'),
+    path('request-swap/<int:profile_id>/', core_views.request_swap, name='request_swap'),
     path('admin/', admin.site.urls),
-    path('adminpanel/', include('adminpanel.urls')),
+    path('adminpanel/', include('adminpanel.urls', namespace='adminpanel')),
     path('users/', include('users.urls')),
-    path('skills/', include('skills.urls')),
-    path('swaps/', include('swaps.urls')),
-    path('reviews/', include('reviews.urls')),
+    path('skills/', include('skills.urls', namespace='skills')),
+    path('swaps/', include('swaps.urls', namespace='swaps')),
+    path('reviews/', include('reviews.urls', namespace='reviews')),
 ]
 
 if settings.DEBUG:

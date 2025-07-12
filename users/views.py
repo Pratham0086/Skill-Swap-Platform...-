@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.views.decorators.csrf import csrf_exempt
 from .forms import UserRegisterForm, UserLoginForm, ProfileEditForm
 from .models import Profile
 from django.contrib.auth.models import User
@@ -13,19 +14,24 @@ def register_view(request):
             user = form.save()
             Profile.objects.create(user=user)  # Create profile on registration
             login(request, user)
-            messages.success(request, 'Registration successful!')
-            return redirect('profile')
+            messages.success(request, 'Registration successful! Welcome to Skill Swap!')
+            return redirect('home')
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
 
+@csrf_exempt
 def login_view(request):
     if request.method == 'POST':
         form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('profile')
+            messages.success(request, f'Welcome back, {user.username}!')
+            return redirect('home')
+        else:
+            # If form is invalid, add a message
+            messages.error(request, 'Invalid username or password. Please try again.')
     else:
         form = UserLoginForm()
     return render(request, 'users/login.html', {'form': form})

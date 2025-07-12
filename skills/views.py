@@ -22,7 +22,7 @@ def skill_dashboard(request):
                 else:
                     UserSkill.objects.create(user=request.user, skill=skill, skill_type='offered')
                     messages.success(request, f'Skill "{skill}" added as offered.')
-            return redirect('skills_dashboard')
+            return redirect('skills:dashboard')
         elif 'add_wanted' in request.POST:
             skill_name = request.POST.get('wanted_skill_name', '').strip()
             if skill_name:
@@ -32,7 +32,7 @@ def skill_dashboard(request):
                 else:
                     UserSkill.objects.create(user=request.user, skill=skill, skill_type='wanted')
                     messages.success(request, f'Skill "{skill}" added as wanted.')
-            return redirect('skills_dashboard')
+            return redirect('skills:dashboard')
     context = {
         'offered_skills': offered_skills,
         'wanted_skills': wanted_skills,
@@ -45,7 +45,7 @@ def delete_user_skill(request, skill_id):
     userskill = UserSkill.objects.get(id=skill_id, user=request.user)
     userskill.delete()
     messages.success(request, 'Skill removed.')
-    return redirect('skills_dashboard')
+    return redirect('skills:dashboard')
 
 @login_required
 def search_users_by_skill(request):

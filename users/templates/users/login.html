@@ -5,7 +5,19 @@
 <div class="row justify-content-center">
     <div class="col-md-6">
         <h2 class="mb-4">Login</h2>
-        <form method="post">
+        
+        {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <form method="post" novalidate>
             {% csrf_token %}
             {{ form|crispy }}
             <button type="submit" class="btn btn-primary w-100">Login</button>
@@ -13,4 +25,11 @@
         <p class="mt-3">Don't have an account? <a href="{% url 'register' %}">Register here</a>.</p>
     </div>
 </div>
+
+<script>
+// Force page reload to get fresh CSRF token
+if (window.performance && window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD) {
+    window.location.reload();
+}
+</script>
 {% endblock %} 

@@ -10,14 +10,14 @@ from django.urls import reverse
 
 @login_required
 def swaps_root_redirect(request):
-    return redirect('swaps_dashboard')
+    return redirect('swaps:dashboard')
 
 @login_required
 def send_swap_request(request, receiver_id):
     receiver = get_object_or_404(User, id=receiver_id)
     if receiver == request.user:
         messages.error(request, "You can't send a swap request to yourself.")
-        return redirect('search_users_by_skill')
+        return redirect('skills:search_users_by_skill')
     if request.method == 'POST':
         form = SwapRequestForm(request.POST, user=request.user, receiver=receiver)
         if form.is_valid():
@@ -29,7 +29,7 @@ def send_swap_request(request, receiver_id):
             else:
                 SwapRequest.objects.create(sender=request.user, receiver=receiver, skill_offered=skill_offered, skill_requested=skill_requested)
                 messages.success(request, 'Swap request sent!')
-            return redirect('swaps_dashboard')
+            return redirect('swaps:dashboard')
     else:
         form = SwapRequestForm(user=request.user, receiver=receiver)
     return render(request, 'swaps/send_request.html', {'form': form, 'receiver': receiver})
@@ -47,7 +47,7 @@ def accept_swap(request, swap_id):
         swap.status = 'accepted'
         swap.save()
         messages.success(request, 'Swap request accepted!')
-    return redirect('swaps_dashboard')
+    return redirect('swaps:dashboard')
 
 @login_required
 def reject_swap(request, swap_id):
@@ -56,7 +56,7 @@ def reject_swap(request, swap_id):
         swap.status = 'rejected'
         swap.save()
         messages.info(request, 'Swap request rejected.')
-    return redirect('swaps_dashboard')
+    return redirect('swaps:dashboard')
 
 @login_required
 def cancel_swap(request, swap_id):
@@ -65,7 +65,7 @@ def cancel_swap(request, swap_id):
         swap.status = 'cancelled'
         swap.save()
         messages.info(request, 'Swap request cancelled.')
-    return redirect('swaps_dashboard')
+    return redirect('swaps:dashboard')
 
 @login_required
 def delete_swap(request, swap_id):
@@ -75,4 +75,4 @@ def delete_swap(request, swap_id):
         messages.success(request, 'Swap request deleted.')
     else:
         messages.error(request, 'Accepted swaps cannot be deleted.')
-    return redirect('swaps_dashboard')
+    return redirect('swaps:dashboard')

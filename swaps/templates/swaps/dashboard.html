@@ -12,10 +12,13 @@
                         <span class="badge bg-info text-dark">{{ swap.get_status_display }}</span>
                         <div>
                             {% if swap.status == 'pending' %}
-                                <a href="{% url 'cancel_swap' swap.id %}" class="btn btn-sm btn-outline-warning">Cancel</a>
-                                <a href="{% url 'delete_swap' swap.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                <a href="{% url 'swaps:cancel_swap' swap.id %}" class="btn btn-sm btn-outline-warning">Cancel</a>
+                                <a href="{% url 'swaps:delete_swap' swap.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                            {% elif swap.status == 'accepted' and user.is_superuser %}
+                                <a href="{% url 'reviews:leave_feedback' swap.id %}" class="btn btn-sm btn-outline-info">Leave Feedback</a>
+                                <a href="{% url 'swaps:delete_swap' swap.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
                             {% elif swap.status != 'accepted' %}
-                                <a href="{% url 'delete_swap' swap.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                <a href="{% url 'swaps:delete_swap' swap.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
                             {% endif %}
                         </div>
                     </li>
@@ -35,8 +38,10 @@
                         <span class="badge bg-info text-dark">{{ swap.get_status_display }}</span>
                         <div>
                             {% if swap.status == 'pending' %}
-                                <a href="{% url 'accept_swap' swap.id %}" class="btn btn-sm btn-outline-success">Accept</a>
-                                <a href="{% url 'reject_swap' swap.id %}" class="btn btn-sm btn-outline-danger">Reject</a>
+                                <a href="{% url 'swaps:accept_swap' swap.id %}" class="btn btn-sm btn-outline-success">Accept</a>
+                                <a href="{% url 'swaps:reject_swap' swap.id %}" class="btn btn-sm btn-outline-danger">Reject</a>
+                            {% elif swap.status == 'accepted' and user.is_superuser %}
+                                <a href="{% url 'reviews:leave_feedback' swap.id %}" class="btn btn-sm btn-outline-info">Leave Feedback</a>
                             {% endif %}
                         </div>
                     </li>
